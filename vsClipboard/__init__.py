@@ -15,9 +15,15 @@ def start():
         print "Pressed"
 
     def v():
+        # hotkey.sendPasteMessage()
         print "Pressed V"
 
     def r():
+        hotkey.sendCopyMessage()
+        print "Released"
+
+    def rp():
+        hotkey.sendPasteMessage()
         print "Released"
 
     import threading
@@ -25,7 +31,7 @@ def start():
     t = threading.Thread(None, hotkey.listenForCopy, args=[p, r])
     t.start()
 
-    t2 = threading.Thread(None, hotkey.listenForPaste, args=[v, r])
+    t2 = threading.Thread(None, hotkey.listenForPaste, args=[v, rp])
     t2.start()
 
     app = QApplication(sys.argv)

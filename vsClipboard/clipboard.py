@@ -40,3 +40,10 @@ def isFile(existingFormats):
     if 15 in existingFormats:
         return True
     return False
+
+
+# def save():
+# 	existing = getClipboardFormats()
+
+# 	if not isFile(existing) and not isImage(existing):
+# 		
