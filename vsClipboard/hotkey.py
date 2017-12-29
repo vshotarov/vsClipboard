@@ -1,9 +1,11 @@
 from ctypes import wintypes
+from PySide.QtCore import *
 
 import ctypes
 import win32con
 import win32api
 
+import threading
 import time
 
 u32 = ctypes.windll.user32
@@ -29,19 +31,32 @@ def unregisterHotkey(ident):
     u32.UnregisterHotKey(None, ident)
 
 
+def sendQuit():
+    print "Sending quit"
+    win32api.PostThreadMessage(threading.current_thread().ident, win32con.WM_QUIT, 0, 0)
+    print "Quit sent"
+
+
 def _listen(keyCode, ident, funcPress, funcRelease):
     registerHotkey(ident, keyCode)
+
+    t = QThread.currentThread()
+    import threading
+    t.threadId = threading.currentThread().ident
 
     try:
         msg = wintypes.MSG()
         while u32.GetMessageA(ctypes.byref(msg), None, 0, 0) != 0:
-            if msg.message == win32con.WM_HOTKEY:
-                _hold(keyCode, funcPress, funcRelease)
-                continue
-            u32.TranslateMessage(ctypes.byref(msg))
-            u32.DispatchMessageA(ctypes.byref(msg))
+                if msg.message == win32con.WM_HOTKEY:
+                    _hold(keyCode, funcPress, funcRelease)
+                    continue
+                if msg.message == win32con.WM_QUIT:
+                    break
+                u32.TranslateMessage(ctypes.byref(msg))
+                u32.DispatchMessageA(ctypes.byref(msg))
     finally:
         u32.UnregisterHotKey(None, ident)
+        print "Unregistered"
 
 
 def listenForCopy(funcPress, funcRelease):

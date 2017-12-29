@@ -1,11 +1,20 @@
 import json
+import cPickle
 
 
 def read():
-    with open(r"D:/Programming/Python/vsClipboard/db.json", "r") as f:
-        return json.loads(f.read())
+    # with open(r"D:/Programming/Python/vsClipboard/db.json", "r") as f:
+    #     return json.loads(f.read())
+
+    try:
+        data = cPickle.load(open(r"D:/Programming/Python/vsClipboard/db.pickle", "rb"))
+    except EOFError:
+        data = []
+    return data
 
 
 def write(data):
-    with open(r"D:/Programming/Python/vsClipboard/db.json", "w") as f:
-        f.write(json.dumps(data, sort_keys=1, indent=4))
+    old = read()
+    old.append(data)
+    f = open(r"D:/Programming/Python/vsClipboard/db.pickle", "wb")
+    cPickle.dump(old, f)

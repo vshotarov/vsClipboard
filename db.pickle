@@ -1,0 +1,203 @@
+(lp1
+(dp2
+S'text'
+p3
+S'    old.append(data)\r\n'
+p4
+sS'hasFile'
+p5
+I00
+sa(dp6
+S'text'
+p7
+S'    return data\r\n'
+p8
+sS'hasFile'
+p9
+I00
+sa(dp10
+S'text'
+p11
+S'    print data\r\n'
+p12
+sS'hasFile'
+p13
+I00
+sa(dp14
+S'text'
+p15
+S'    try:\r\n'
+p16
+sS'hasFile'
+p17
+I00
+sa(dp18
+S'text'
+p19
+S'\r\nsite design / logo \xa9 2017 Stack Exchange Inc; user contributions licensed under cc by-sa 3.0 with attribution required. rev 2017.12.22.28257 \r\n'
+p20
+sS'hasFile'
+p21
+I00
+sa(dp22
+S'text'
+p23
+S'    if data:\r\n'
+p24
+sS'hasFile'
+p25
+I00
+sa(dp26
+S'text'
+p27
+S'            if time.time() - startTime > 1:\r\n'
+p28
+sS'hasFile'
+p29
+I00
+sa(dp30
+S'text'
+p31
+S'    data = getData()\r\n'
+p32
+sS'hasFile'
+p33
+I00
+sa(dp34
+S'text'
+p35
+S'        newData = data\r\n'
+p36
+sS'hasFile'
+p37
+I00
+sa(dp38
+S'text'
+p39
+(VD:\u005cProgramming\u005cPython\u005cvsControlPC\u005cvsControl\u005ccontrol\u005cvolume.py
+tp40
+sS'hasFile'
+p41
+I01
+sa(dp42
+S'text'
+p43
+(VD:\u005cProgramming\u005cPython\u005cvsControlPC\u005cvsControl\u005ccontrol\u005cvolume.py
+VD:\u005cProgramming\u005cPython\u005cvsControlPC\u005cvsControl\u005ccontrol\u005cvolume.pyc
+VD:\u005cProgramming\u005cPython\u005cvsControlPC\u005cvsControl\u005ccontrol\u005c__init__.py
+VD:\u005cProgramming\u005cPython\u005cvsControlPC\u005cvsControl\u005ccontrol\u005c__init__.pyc
+tp44
+sS'hasFile'
+p45
+I01
+sa(dp46
+S'text'
+p47
+S'        "text": text,\r\n'
+p48
+sS'html'
+p49
+NsS'hasFile'
+p50
+I00
+sa(dp51
+S'text'
+p52
+S'    win32clipboard.CloseClipboard()\r\n'
+p53
+sS'html'
+p54
+NsS'hasFile'
+p55
+I00
+sa(dp56
+S'text'
+p57
+S'    old = read()\r\n'
+p58
+sS'html'
+p59
+NsS'hasFile'
+p60
+I00
+sa(dp61
+S'text'
+p62
+S'\r\n    w.show()\r\n    app.exec_()'
+p63
+sS'html'
+p64
+NsS'hasFile'
+p65
+I00
+sa(dp66
+S'text'
+p67
+S'    t.do_run = False\r\n'
+p68
+sS'html'
+p69
+NsS'hasFile'
+p70
+I00
+sa(dp71
+S'text'
+p72
+S'            save()\r\n'
+p73
+sS'html'
+p74
+NsS'hasFile'
+p75
+I00
+sa(dp76
+S'text'
+p77
+S'            getattr(t, "hide").emit()\r\n'
+p78
+sS'html'
+p79
+NsS'hasFile'
+p80
+I00
+sa(dp81
+S'text'
+p82
+S'        self.hideSignal.connect(self.hide)\r\n'
+p83
+sS'html'
+p84
+NsS'hasFile'
+p85
+I00
+sa(dp86
+S'text'
+p87
+S'    clipboardMonitorThread = QThread()\r\n'
+p88
+sS'html'
+p89
+NsS'hasFile'
+p90
+I00
+sa(dp91
+S'text'
+p92
+S'    clipboardMonitorThread.run = clipboard.monitorClipboard\r\n'
+p93
+sS'html'
+p94
+NsS'hasFile'
+p95
+I00
+sa(dp96
+S'text'
+p97
+S'\r\n    clipboardMonitorThread.run = clipboard.monitorClipboard\r\n    clipboardMonitorThread.start()\r\n\r\n    app = QApplication(sys.argv)\r\n    app.setQuitOnLastWindowClosed(False)\r\n    main = Main()'
+p98
+sS'html'
+p99
+NsS'hasFile'
+p100
+I00
+sa.
