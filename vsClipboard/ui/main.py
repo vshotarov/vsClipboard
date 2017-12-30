@@ -13,5 +13,7 @@ class Main(QWidget):
 
         l = QLabel("This is the main window", self)
 
+        QLineEdit(self)
+
     def closeEvent(self, e):
         QApplication.instance().quit()

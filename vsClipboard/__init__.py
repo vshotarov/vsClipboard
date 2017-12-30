@@ -7,18 +7,22 @@ from PySide.QtCore import *
 from functools import partial
 import win32api
 import win32con
+import win32gui
+import win32process
 import sys
 
 
 def start():
     def pastePress():
         t = QThread.currentThread()
-        getattr(t, "showPaste").emit()
+        getattr(t, "showPaste").emit(clipboard.getHistory())
+        setattr(t, "foregroundWindow", win32gui.GetForegroundWindow())
         print "Paste Pressed"
 
     def pasteRelease():
         t = QThread.currentThread()
         getattr(t, "hidePaste").emit()
+        win32gui.SetForegroundWindow(getattr(t, "foregroundWindow"))
         hotkey.sendPasteMessage()
         print "Paste Released"
 

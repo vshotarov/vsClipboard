@@ -123,3 +123,18 @@ def save():
             time.sleep(.01)
             data = getData()
         database.write(data)
+
+
+def set(data):
+    win32clipboard.OpenClipboard()
+
+    win32clipboard.EmptyClipboard()
+
+    win32clipboard.SetClipboardData(win32clipboard.CF_TEXT, data["text"])
+
+    win32clipboard.CloseClipboard()
+
+    print "Set text to ", data["text"]
+
+def getHistory():
+    return database.read()
