@@ -8,9 +8,8 @@ from functools import partial
 import win32api
 import win32con
 import win32gui
-import win32process
 import sys
-
+import time
 
 def start():
     def pastePress():

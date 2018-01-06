@@ -15,8 +15,18 @@ V_KEY_CODE = ord("V")
 
 
 def _hold(keyCode, funcPress, funcRelease):
-    funcPress()
     state = u32.GetKeyState(keyCode)
+    released = True
+    startTime = time.time()
+    while u32.GetKeyState(keyCode) == state:
+        if time.time() - startTime > .3:
+            released = False
+            break
+    if released:
+        sendPasteMessage()
+        return
+    funcPress()
+    # state = u32.GetKeyState(keyCode)
     while u32.GetKeyState(keyCode) == state:
         time.sleep(.01)
     funcRelease()

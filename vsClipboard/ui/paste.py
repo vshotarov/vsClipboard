@@ -33,18 +33,22 @@ class Paste(QWidget):
         self.setLayout(layout)
 
     def showAndPopulate(self, data):
-        for button in self.buttons:
-            button.deleteLater()
+        # for button in self.buttons:
+        #     button.deleteLater()
 
-        self.buttons = []
+        # self.buttons = []
 
-        for each in reversed(data):
+        for each in data:
             text = each["text"] if not each["hasFile"] else each["text"][0]
             self.buttons.append(QPushButton(text, self))
             self.buttons[-1].setFocusPolicy(Qt.NoFocus)
             self.buttons[-1].clicked.connect(partial(clipboard.set, each))
-            self.layout().addWidget(self.buttons[-1])
+            self.layout().insertWidget(0, self.buttons[-1])
+
+            if len(self.buttons) > 2:
+                w = self.buttons.pop(0)
+                self.layout().removeWidget(w)
+                w.deleteLater()
 
         # self.resize(100, 500)
-        # self.update()
         self.show()
