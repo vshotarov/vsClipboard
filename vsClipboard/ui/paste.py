@@ -25,9 +25,10 @@ class Paste(QWidget):
         self.buildUI()
 
     def buildUI(self):
-        self.resize(100, 500)
+        self.resize(500, 500)
 
         layout = QVBoxLayout()
+        # layout.setSizeConstraint(QLayout.SetNoConstraint)
 
         self.setLayout(layout)
 
@@ -37,11 +38,13 @@ class Paste(QWidget):
 
         self.buttons = []
 
-        for each in data:
+        for each in reversed(data):
             text = each["text"] if not each["hasFile"] else each["text"][0]
             self.buttons.append(QPushButton(text, self))
             self.buttons[-1].setFocusPolicy(Qt.NoFocus)
             self.buttons[-1].clicked.connect(partial(clipboard.set, each))
             self.layout().addWidget(self.buttons[-1])
 
+        # self.resize(100, 500)
+        # self.update()
         self.show()

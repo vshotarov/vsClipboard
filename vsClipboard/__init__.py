@@ -30,7 +30,7 @@ def start():
     app.setQuitOnLastWindowClosed(False)
     main = Main()
     paste = Paste()
-    paste.show()
+    # paste.show()
     main.show()
 
     clipboardMonitorThread = QThread()
