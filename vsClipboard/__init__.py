@@ -11,6 +11,7 @@ import win32gui
 import sys
 import time
 
+
 def start():
     def pastePress():
         t = QThread.currentThread()
