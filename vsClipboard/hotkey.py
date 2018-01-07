@@ -2,7 +2,7 @@
 
 This module interacts with the hotkey functionalities of Windows, to provide
 us with a way to non-destructively register a callback to be fired whenever
-Ctrl + V is pressed and held for more than a threshold (.3 seconds in this
+Ctrl + V is pressed and held for more than a threshold (.15 seconds in this
 case).
 
 Attributes:
@@ -35,14 +35,14 @@ def _hold(funcPress, funcRelease):
     If it is just being tapped, then we wait for a release and just trigger the normal
     paste functionality, before exiting.
 
-    If it is being held pressed down for more than .3 seconds, then the funcPress
+    If it is being held pressed down for more than .15 seconds, then the funcPress
     callable is executed, followed by a while loop waiting for the key to be released.
     Once it is released the funcRelease callable is executed.
 
     Args:
-        funcPress: a callable to execute once the user is held the key down for more than .3 seconds
+        funcPress: a callable to execute once the user is held the key down for more than .15 seconds
         funcRelease: a callable to execute once the user has released the key after initially having
-        held it down for more than .3 seconds
+        held it down for more than .15 seconds
     '''
     keyCode = V_KEY_CODE
 
@@ -51,7 +51,7 @@ def _hold(funcPress, funcRelease):
     startTime = time.time()
 
     while u32.GetKeyState(keyCode) == state:
-        if time.time() - startTime > .3:
+        if time.time() - startTime > .15:
             released = False
             break
 
@@ -80,7 +80,7 @@ def _registerHotkey():
         RuntimeError: If for any reason the hotkey cannot be initialized raises an error.
     '''
     if not u32.RegisterHotKey(None, 1, win32con.MOD_CONTROL | 0x4000, V_KEY_CODE):
-        raise RuntimeError("Could not register hotkey " + str(ident) + " " + str(V_KEY_CODE))
+        raise RuntimeError("Could not register hotkey for Ctl + V, 1 " + str(V_KEY_CODE))
     print "Reigstered the Ctrl + V hotkey"
 
 
@@ -130,7 +130,7 @@ def listenForPaste(funcPress, funcRelease):
     so we can send a QUIT message from the main to this one when we want to exit.
 
     Args:
-        funcPress: A callable to be executed when the hotkey is pressed for more than .3 seconds
+        funcPress: A callable to be executed when the hotkey is pressed for more than .15 seconds
         funcRelease: A callable to be executed when the hotkey is released after being triggered
     '''
     _registerHotkey()

@@ -20,6 +20,28 @@ from PySide.QtCore import QThread
 u32 = ctypes.windll.user32  # Make it easier to access the namespace
 
 
+def registerCustomClipboardFormat():
+    '''Registers a custom clipbord format to detect internal clipboard
+    changes.
+
+    We need to be able to detec whether a clipboard change is due to our 
+    own functions or an outside source, in order to make sure that pasting
+    does not add entries to the clipboard history.
+
+    Returns:
+        The id of the custom format
+        int
+
+    Raises:
+        RuntimeError: Raises an error if for any reason we can't register
+        a clipboard format.
+    '''
+    customFormatID = win32clipboard.RegisterClipboardFormat("vsClipboardPaste")
+    if customFormatID == 0:
+        raise RuntimeError("Could not register custom clipboard format")
+    return customFormatID
+
+
 def getClipboardFormats():
     '''Returns a list containing the integer codes for the various formats currently
     in the clipboard
@@ -39,6 +61,27 @@ def getClipboardFormats():
     win32clipboard.CloseClipboard()
 
     return available
+
+
+def isInternal():
+    '''Checks whether the current clipboard data is set from withing the application.
+
+    Using the custom clipboard format we have registered, we detect whether the change
+    of the clipboard is due to internal reasons, in which case it is being skipped in
+    the monitorClipboard function.
+
+    Returns:
+        True if the clipboard change is internal, False otherwise
+        bool
+    '''
+    t = QThread.currentThread()
+
+    if not hasattr(t, "customClipboardFormatID"):
+        t.customClipboardFormatID = registerCustomClipboardFormat()
+
+    if getattr(t, "customClipboardFormatID") in getClipboardFormats():
+        return True
+    return False
 
 
 def isImage(existingFormats):
@@ -129,7 +172,7 @@ def getData():
     hasImage = isImage(existing)
     hasHtml = isHTML(existing)
 
-    if not hasText and not hasFile and not hasImage:
+    if not hasText and not hasFile and not hasHtml:  # Once image support is addes hasImage needs to be added here
         return {}
 
     win32clipboard.OpenClipboard()
@@ -169,7 +212,7 @@ def monitorClipboard():
     data = getData()
     while getattr(t, "do_run", True):
         newData = getData()
-        if newData and newData != data:
+        if newData and newData != data and not isInternal():
             save()
         data = newData
         time.sleep(.5)
@@ -177,28 +220,29 @@ def monitorClipboard():
 
 def save():
     '''Saves the current clipboard data to history.
-    
+
     The data is retrieved using getData() and is then appended
     to the existing clipboard history.
     '''
     data = getData()
     old = database.read()
 
-    old = old[-1] if old else data
+    old = old[-1] if old else {}
 
     if data:
         startTime = time.time()
 
-        # If the data that needs to be saved is exactly the same 
+        # If the data that needs to be saved is exactly the same
         # as the latest data in the history, give it 1 second
-        # to make sure changes have been reflected and if 
+        # to make sure changes have been reflected and if
         # there is still no change return
 
-        # Otherwise carry on saving the data, as 
+        # Otherwise carry on saving the data, as
         # it can be assumed that it is different
         # than the latest one in the history
         while data == old:
             if time.time() - startTime > 1:
+                print "Returning"
                 return
             time.sleep(.01)
             data = getData()
@@ -207,7 +251,7 @@ def save():
 
 def set(data):
     '''Sets the clipboard to the passed in data from the history.
-    
+
     Currently, only the text data is supported, so if a file has been copied
     only the path to it would be set to clipboard.
 
@@ -218,25 +262,31 @@ def set(data):
     instead of just paths, in which case, all I need to do is check
     if there is a file or image stored, read that and put it 
     on the clipboard.
-    
+
     Args:
         data: The data received from the clipboard history in the 
         same format as in the getData function
     '''
+    t = QThread.currentThread()
+
+    if not hasattr(t, "customClipboardFormatID"):
+        t.customClipboardFormatID = registerCustomClipboardFormat()
+
     win32clipboard.OpenClipboard()
 
     win32clipboard.EmptyClipboard()
 
     win32clipboard.SetClipboardData(win32clipboard.CF_TEXT, data["text"])
+    win32clipboard.SetClipboardData(getattr(t, "customClipboardFormatID"), "1")
 
     win32clipboard.CloseClipboard()
 
 
 def getHistory():
     '''Returns the list containing the existing clipboard history.
-    
+
     The list contains dictionaries in the format specified in the getData function.
-    
+
     Returns:
         A list of dict elements containing entries in the clipboard history
         list

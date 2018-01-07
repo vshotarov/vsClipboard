@@ -39,6 +39,7 @@ class Paste(QWidget):
         # self.buttons = []
 
         for each in data:
+            print each
             text = each["text"] if not each["hasFile"] else each["text"][0]
             self.buttons.append(QPushButton(text, self))
             self.buttons[-1].setFocusPolicy(Qt.NoFocus)

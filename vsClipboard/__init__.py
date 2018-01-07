@@ -9,7 +9,6 @@ import win32api
 import win32con
 import win32gui
 import sys
-import time
 
 
 def start():
@@ -33,6 +32,8 @@ def start():
     # paste.show()
     main.show()
 
+    clipboard.registerCustomClipboardFormat()
+
     clipboardMonitorThread = QThread()
     clipboardMonitorThread.run = clipboard.monitorClipboard
     clipboardMonitorThread.start()
@@ -41,6 +42,7 @@ def start():
     pasteThread.run = partial(hotkey.listenForPaste, pastePress, pasteRelease)
     pasteThread.showPaste = paste.showPaste
     pasteThread.hidePaste = paste.hidePaste
+    pasteThread.pasteIsVisible = paste.isVisible
     pasteThread.start()
 
     app.exec_()
