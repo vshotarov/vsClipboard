@@ -225,7 +225,7 @@ def save():
     to the existing clipboard history.
     '''
     data = getData()
-    old = database.read()
+    old = getHistory()
 
     old = old[-1] if old else {}
 
