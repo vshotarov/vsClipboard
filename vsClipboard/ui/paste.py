@@ -27,8 +27,8 @@ class Paste(QWidget):
         self.showPaste.connect(self.showAndPopulate)
         self.hidePaste.connect(self.hide)
 
-        # self.setWindowFlags(Qt.Tool | Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)
-        self.setWindowFlags(Qt.Tool | Qt.WindowStaysOnTopHint)
+        self.setWindowFlags(Qt.Tool | Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)
+        # self.setWindowFlags(Qt.Tool | Qt.WindowStaysOnTopHint)
         self.setFocusPolicy(Qt.NoFocus)
         self.setAttribute(Qt.WA_ShowWithoutActivating)
 
@@ -43,7 +43,9 @@ class Paste(QWidget):
         self.setStyleSheet("QPushButton:hover{background-color:%s; border:0;}" % HOVER_COLOUR)
 
     def buildUI(self):
-        self.resize(500, 500)
+        screen = QCoreApplication.instance().desktop().availableGeometry()
+        self.move(screen.x() + screen.width() - 400, screen.y())
+        self.setFixedSize(400, screen.height())
 
         layout = QVBoxLayout()
         layout.setSpacing(0)

@@ -209,7 +209,7 @@ def monitorClipboard():
     '''
     t = QThread.currentThread()
 
-    data = getData()
+    data = getHistory()[-1]
     while getattr(t, "do_run", True):
         newData = getData()
         if newData and newData != data and not isInternal():
