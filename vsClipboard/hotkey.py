@@ -29,7 +29,7 @@ def _hold(funcPress, funcRelease):
     '''This function is triggered on pressing the paste hotkey and waits for a release.
 
     Whenever the user pesses the paste key combination, this function gets the current
-    state of the "V" key in order to detect whether the key was just tapped or is 
+    state of the "V" key in order to detect whether the key was just tapped or is
     being held down.
 
     If it is just being tapped, then we wait for a release and just trigger the normal

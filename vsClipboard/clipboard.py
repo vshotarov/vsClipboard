@@ -260,11 +260,11 @@ def set(data):
 
     In the future, I might find I prefer pasting actual files and images,
     instead of just paths, in which case, all I need to do is check
-    if there is a file or image stored, read that and put it 
+    if there is a file or image stored, read that and put it
     on the clipboard.
 
     Args:
-        data: The data received from the clipboard history in the 
+        data: The data received from the clipboard history in the
         same format as in the getData function
     '''
     t = QThread.currentThread()
