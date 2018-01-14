@@ -7,8 +7,8 @@ case).
 
 Attributes:
     u32: A shortened namespace for ctypes.windll.user32
-	V_KEY_CODE: The virtual key code for the "V" key specified in
-	https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx
+    V_KEY_CODE: The virtual key code for the "V" key specified in
+    https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx
 '''
 from ctypes import wintypes
 from PySide.QtCore import *
@@ -47,6 +47,17 @@ def _hold(funcPress, funcRelease):
     keyCode = V_KEY_CODE
 
     state = u32.GetKeyState(keyCode)
+    pressed = (state >> 8) & 1
+
+    if not pressed:
+        # Getting around a bug where the hotkey is triggered by releasing a key which has 
+        # been pressed together with the Ctrl + V combination.
+        #
+        # Example - If I press Ctrl + A + V it triggers the Ctl + V hotkey. But if at any
+        # point I release A, it triggers it again, which means that after releasing the 
+        # Ctrl + V hotkey, the _hold function will be called again.
+        return
+
     released = True
     startTime = time.time()
 

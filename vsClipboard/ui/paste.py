@@ -40,7 +40,9 @@ class Paste(QWidget):
 
         self.itemHeight = self.height() * .1
 
-        self.setStyleSheet("QPushButton:hover{background-color:%s; border:0;}" % HOVER_COLOUR)
+        self.setStyleSheet("""
+QPushButton:hover{background-color:%s}
+QPushButton{background-color:#444; border: 0; border-bottom: 1px solid black;}""" % HOVER_COLOUR);
 
     def buildUI(self):
         screen = QCoreApplication.instance().desktop().availableGeometry()
