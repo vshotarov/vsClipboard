@@ -1,15 +1,22 @@
 from PySide.QtGui import *
 from PySide.QtCore import *
 
+from .. import config
 
 class Main(QWidget):
-    def __init__(self):
+    updatePreferences = Signal()
+
+    def __init__(self, _config):
         super(Main, self).__init__()
+
+        self.config = _config
 
         self.buildUI()
 
     def buildUI(self):
         self.resize(300, 300)
+
+        self.setLayout(QVBoxLayout())
 
         self.trayIcon = QSystemTrayIcon(QIcon("icon.png"), self)
         self.trayIcon.setToolTip("vsClipboard\nMonitoring clipboard")
@@ -24,7 +31,32 @@ class Main(QWidget):
 
         self.trayIcon.show()
 
-        QLineEdit(self)
+        t = QLineEdit(self)
+
+        self.historyLengthSpinBox = QSpinBox(self)
+        self.historyLengthSpinBox.setMinimum(1)
+        self.historyLengthSpinBox.setMaximum(50)
+        self.historyLengthSpinBox.setValue(self.config["history_length"])
+
+        self.holdBeforeShowSpinBox = QDoubleSpinBox(self)
+        self.holdBeforeShowSpinBox.setMinimum(.01)
+        self.holdBeforeShowSpinBox.setMaximum(5)
+        self.holdBeforeShowSpinBox.setValue(self.config["hold_before_showing"])
+
+        self.savePreferencesButton = QPushButton("Save preferences", self)
+        self.savePreferencesButton.clicked.connect(self.savePreferences)
+
+        self.layout().addWidget(t)
+        self.layout().addWidget(self.historyLengthSpinBox)
+        self.layout().addWidget(self.holdBeforeShowSpinBox)
+        self.layout().addWidget(self.savePreferencesButton)
+
+    def savePreferences(self):
+        d = {}
+        d["history_length"] = self.historyLengthSpinBox.value()
+        d["hold_before_showing"] = self.holdBeforeShowSpinBox.value()
+        config.update(d)
+        self.updatePreferences.emit()
 
     def closeEvent(self, e):
         QApplication.instance().quit()

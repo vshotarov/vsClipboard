@@ -1,6 +1,7 @@
 import cPickle
 import sqlite3
 
+from PySide.QtCore import QThread
 
 def _createTable(connection):
     cursor = connection.cursor()
@@ -15,6 +16,13 @@ def _initConnection():
         _createTable(connection)
 
     return connection
+
+
+# def _getConnection():
+# 	t = QThread.currentThread()
+# 	if not hasattr(t, "dbConnection"):
+# 		setattr(t, "dbConnection", _initConnection())
+# 	return getattr(t, "dbConnection")
 
 
 def read():

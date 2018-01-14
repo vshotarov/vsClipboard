@@ -1,6 +1,7 @@
 from ui import Main, Paste
 import hotkey
 import clipboard
+import config
 
 from PySide.QtGui import *
 from PySide.QtCore import *
@@ -25,17 +26,22 @@ def start():
         hotkey.sendPasteMessage()
         print "Paste Released"
 
+    parsedConfig = config.parse()
+
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
-    main = Main()
+    main = Main(parsedConfig)
     paste = Paste()
     # paste.show()
     main.show()
+
+    paste.initConfig(parsedConfig)
 
     clipboard.registerCustomClipboardFormat()
 
     clipboardMonitorThread = QThread()
     clipboardMonitorThread.run = clipboard.monitorClipboard
+    clipboardMonitorThread.config = parsedConfig
     clipboardMonitorThread.start()
 
     pasteThread = QThread()
@@ -43,7 +49,17 @@ def start():
     pasteThread.showPaste = paste.showPaste
     pasteThread.hidePaste = paste.hidePaste
     pasteThread.pasteIsVisible = paste.isVisible
+    pasteThread.config = parsedConfig
     pasteThread.start()
+
+    def updateConfig():
+        parsedConfig = config.parse()
+        paste.initConfig(parsedConfig)
+        clipboardMonitorThread.config = parsedConfig
+        pasteThread.config = parsedConfig
+        print "Updated preferences in all threads"
+
+    main.updatePreferences.connect(updateConfig)
 
     app.exec_()
 

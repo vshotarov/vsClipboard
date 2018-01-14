@@ -13,6 +13,7 @@ import win32clipboard
 import time
 
 import database
+import config
 
 from PySide.QtCore import QThread
 

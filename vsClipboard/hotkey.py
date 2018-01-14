@@ -20,6 +20,8 @@ import win32api
 import threading
 import time
 
+import config
+
 u32 = ctypes.windll.user32  # Make it easier to access the namespace
 
 V_KEY_CODE = ord("V")  # The key code for the "V" key that needs to be passed to win functions
@@ -62,7 +64,7 @@ def _hold(funcPress, funcRelease):
     startTime = time.time()
 
     while u32.GetKeyState(keyCode) == state:
-        if time.time() - startTime > .15:
+        if time.time() - startTime > config.get("hold_before_showing"):
             released = False
             break
 
