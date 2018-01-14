@@ -10,7 +10,7 @@ def _createTable(connection):
 
 
 def _initConnection():
-    connection = sqlite3.connect("D:/Programming/Python/vsClipboard_DB")
+    connection = sqlite3.connect("clipboard_database")
 
     if not connection.execute("SELECT name FROM sqlite_master WHERE type = 'table'").fetchall():
         _createTable(connection)

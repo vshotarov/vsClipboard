@@ -55,7 +55,8 @@ QPushButton{background-color:#444; border: 0; border-bottom: 1px solid black;}""
         self.setLayout(layout)
 
     def showAndPopulate(self, data):
-        data = list(reversed(data[-self.historyLength:])) if len(data) >= self.historyLength else data
+        data = data[-self.historyLength:] if len(data) >= self.historyLength else data
+        data = list(reversed(data))
 
         if data == self.previousData:
             self.show()
