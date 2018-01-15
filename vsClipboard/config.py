@@ -2,9 +2,11 @@ import json
 from PySide.QtCore import QThread
 
 _config = {
-    "history_length" : 10,
-    "hold_before_showing" : .15
+    "history_length": 10,
+    "hold_before_showing": .15,
+    "poll_clipboard_interval": .5
 }
+
 
 def parse():
     try:
@@ -14,6 +16,7 @@ def parse():
         config = _config
     return config
 
+
 def get(key=None):
     t = QThread.currentThread()
     if not key:
@@ -21,9 +24,10 @@ def get(key=None):
     else:
         return getattr(t, "config")[key]
 
-def update(new):
+
+def save(new):
     try:
         with open("config.json", "w") as f:
             f.write(json.dumps(new, sort_keys=1, indent=4))
     except:
-        print "Could not save new configuration to the config file."
+        raise IOError("Could not save new configuration to the config file.")

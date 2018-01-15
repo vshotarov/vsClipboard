@@ -207,6 +207,9 @@ def monitorClipboard():
 
     The while loop exits once the "do_run" attribute of the current thread
     is set to False from the main thread.
+
+    On exit we are checking whether we have a database connection stored on the
+    thread and if we do, we close it.
     '''
     t = QThread.currentThread()
 
@@ -217,7 +220,11 @@ def monitorClipboard():
         if newData and newData != data and not isInternal():
             save()
         data = newData
-        time.sleep(.5)
+        time.sleep(config.get("poll_clipboard_interval"))
+
+    if hasattr(t, "dbConnection"):
+        getattr(t, "dbConnection").close()
+        print "Closed dbConnection in clipboard thread"
 
 
 def save():
@@ -278,7 +285,9 @@ def set(data):
 
     win32clipboard.EmptyClipboard()
 
-    win32clipboard.SetClipboardData(win32clipboard.CF_TEXT, data["text"])
+    # Converting the "text" key to string as in the case of a file it is a
+    # tuple.
+    win32clipboard.SetClipboardData(win32clipboard.CF_TEXT, str(data["text"]))
     win32clipboard.SetClipboardData(getattr(t, "customClipboardFormatID"), "1")
 
     win32clipboard.CloseClipboard()

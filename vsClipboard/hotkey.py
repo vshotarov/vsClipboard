@@ -142,6 +142,9 @@ def listenForPaste(funcPress, funcRelease):
     It registers the hotkey and sends the current thread's ID to the main thread,
     so we can send a QUIT message from the main to this one when we want to exit.
 
+    On exit we are checking whether we have a database connection stored on the
+    thread and if we do, we close it.
+
     Args:
         funcPress: A callable to be executed when the hotkey is pressed for more than .15 seconds
         funcRelease: A callable to be executed when the hotkey is released after being triggered
@@ -164,3 +167,7 @@ def listenForPaste(funcPress, funcRelease):
     finally:
         u32.UnregisterHotKey(None, 1)
         print "Unregistered the Ctrl + V hotkey"
+
+        if hasattr(t, "dbConnection"):
+            getattr(t, "dbConnection").close()
+            print "Closed dbConnection in paste thread"

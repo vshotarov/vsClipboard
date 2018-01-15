@@ -21,8 +21,8 @@ class Paste(QWidget):
     showPaste = Signal(list)
     hidePaste = Signal()
 
-    def __init__(self, parent=None):
-        super(Paste, self).__init__(parent)
+    def __init__(self, parsedConfig=None):
+        super(Paste, self).__init__()
 
         self.showPaste.connect(self.showAndPopulate)
         self.hidePaste.connect(self.hide)
@@ -37,6 +37,8 @@ class Paste(QWidget):
         self.previousData = []
 
         self.buildUI()
+
+        self.initConfig(parsedConfig)
 
         self.itemHeight = self.height() * .1
 

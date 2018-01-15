@@ -43,19 +43,26 @@ class Main(QWidget):
         self.holdBeforeShowSpinBox.setMaximum(5)
         self.holdBeforeShowSpinBox.setValue(self.config["hold_before_showing"])
 
+        self.pollIntervalSpinBox = QDoubleSpinBox(self)
+        self.pollIntervalSpinBox.setMinimum(.01)
+        self.pollIntervalSpinBox.setMaximum(5)
+        self.pollIntervalSpinBox.setValue(self.config["poll_clipboard_interval"])
+
         self.savePreferencesButton = QPushButton("Save preferences", self)
         self.savePreferencesButton.clicked.connect(self.savePreferences)
 
         self.layout().addWidget(t)
         self.layout().addWidget(self.historyLengthSpinBox)
         self.layout().addWidget(self.holdBeforeShowSpinBox)
+        self.layout().addWidget(self.pollIntervalSpinBox)
         self.layout().addWidget(self.savePreferencesButton)
 
     def savePreferences(self):
         d = {}
         d["history_length"] = self.historyLengthSpinBox.value()
         d["hold_before_showing"] = self.holdBeforeShowSpinBox.value()
-        config.update(d)
+        d["poll_clipboard_interval"] = self.pollIntervalSpinBox.value()
+        config.save(d)
         self.updatePreferences.emit()
 
     def closeEvent(self, e):
