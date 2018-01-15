@@ -1,3 +1,18 @@
+'''This file contains the entry point of the application.
+
+All the modules are tied into the UI in the start function.
+
+We are spawning 2 threads
+
+- one to monitor the clipboard
+- one to listen for paste events and handle them
+
+Additionally, a functionality of saving and reloading the
+preferences while running is set up.
+
+Once the application exits, we make sure the threads are
+terminated fully.
+'''
 from ui import Main, Paste
 import hotkey
 import clipboard
