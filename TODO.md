@@ -1,9 +1,9 @@
 ## TO DO:
-- [] Languages support - use unicode instead of plain text
 - [] Rewrite the UI classes so they behave in the way I want them and look the way i want them
 - [] Investigate occasional delay
 
 ## DONE:
+- [x] Languages support - use unicode instead of plain text
 - [x] Watch out for the paste window getting left behind which means we are stuck in the _hold function loop between funcPress and funcRelease
     + **UPDATE**: Seems like the issue is caused when pressing other buttons together with the hotkey combination. Essentially, if I press Ctrl + A + V I get a hotkey trigger. When I release A, though, I get another hotkey trigger even though Ctrl + V is still pressed.
 - [x] Config file. Store preferences

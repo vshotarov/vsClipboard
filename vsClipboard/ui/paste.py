@@ -6,7 +6,7 @@ from functools import partial
 from .. import clipboard
 
 
-ACTIVE_COLOUR = "#446CB3"
+ACTIVE_COLOUR = "#9b59b6"
 HOVER_COLOUR = "rgba(112,78,223, 255)"
 
 
@@ -33,6 +33,7 @@ class Paste(QWidget):
         self.setAttribute(Qt.WA_ShowWithoutActivating)
 
         self.buttons = []
+        self.wheelScrolled = False
         self.active = None
         self.previousData = []
 
@@ -100,6 +101,7 @@ QPushButton{background-color:#444; border: 0; border-bottom: 1px solid black;}""
             self.buttons[-1].clicked.connect(partial(self.buttonClicked, each, self.buttons[-1]))
             self.layout().addWidget(self.buttons[-1])
 
+        self.wheelScrolled = False
         self.select(self.buttons[0])
         self.show()
         self.activateWindow()
@@ -123,6 +125,19 @@ QPushButton{background-color:#444; border: 0; border-bottom: 1px solid black;}""
         self.historyLength = self.config["history_length"]
 
     def wheelEvent(self, e):
-        print "WHEEL"
+        currentButtonIndex = self.buttons.index(self.active)
+
+        toSelectIndex = currentButtonIndex + 1 if e.delta() < 0 else currentButtonIndex - 1
+
+        self.deselect()
+        self.select(self.buttons[toSelectIndex % len(self.buttons)])
+
+        self.wheelScrolled = True
 
         return super(Paste, self).wheelEvent(e)
+
+    def hideEvent(self, e):
+        if self.wheelScrolled:
+            self.active.clicked.emit()
+
+        return super(Paste, self).hideEvent(e)

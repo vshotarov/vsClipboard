@@ -11,12 +11,23 @@ class Main(QWidget):
 
         self.config = _config
 
+        self.setWindowFlags(Qt.FramelessWindowHint)
+
         self.buildUI()
 
     def buildUI(self):
         self.resize(300, 300)
 
         self.setLayout(QVBoxLayout())
+
+        windowButtonsLayout = QHBoxLayout()
+        minimizeButton = QPushButton("-")
+        closeButton = QPushButton("x")
+        windowButtonsLayout.addStretch(8)
+        windowButtonsLayout.addWidget(minimizeButton)
+        windowButtonsLayout.addWidget(closeButton)
+        minimizeButton.clicked.connect(self.showMinimized)
+        closeButton.clicked.connect(self.close)
 
         self.trayIcon = QSystemTrayIcon(QIcon("icon.png"), self)
         self.trayIcon.setToolTip("vsClipboard\nMonitoring clipboard")
@@ -51,6 +62,7 @@ class Main(QWidget):
         self.savePreferencesButton = QPushButton("Save preferences", self)
         self.savePreferencesButton.clicked.connect(self.savePreferences)
 
+        self.layout().addLayout(windowButtonsLayout)
         self.layout().addWidget(t)
         self.layout().addWidget(self.historyLengthSpinBox)
         self.layout().addWidget(self.holdBeforeShowSpinBox)
