@@ -6,7 +6,7 @@ from functools import partial
 from .. import clipboard
 
 
-ACTIVE_COLOUR = "rgba(135, 23, 23, 255)"
+ACTIVE_COLOUR = "#446CB3"
 HOVER_COLOUR = "rgba(112,78,223, 255)"
 
 
@@ -16,6 +16,7 @@ class Button(QPushButton):
 
     def enterEvent(self, e):
         pass
+
 
 class Paste(QWidget):
     showPaste = Signal(list)
@@ -28,7 +29,6 @@ class Paste(QWidget):
         self.hidePaste.connect(self.hide)
 
         self.setWindowFlags(Qt.Tool | Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)
-        # self.setWindowFlags(Qt.Tool | Qt.WindowStaysOnTopHint)
         self.setFocusPolicy(Qt.NoFocus)
         self.setAttribute(Qt.WA_ShowWithoutActivating)
 
@@ -44,7 +44,9 @@ class Paste(QWidget):
 
         self.setStyleSheet("""
 QPushButton:hover{background-color:%s}
-QPushButton{background-color:#444; border: 0; border-bottom: 1px solid black;}""" % HOVER_COLOUR);
+QPushButton{background-color:#444; border: 0; border-bottom: 1px solid black;}""" % HOVER_COLOUR)
+        with open("vsClipboard/ui/styles.css", "r") as f:
+            self.setStyleSheet(f.read())
 
     def buildUI(self):
         screen = QCoreApplication.instance().desktop().availableGeometry()
@@ -56,12 +58,18 @@ QPushButton{background-color:#444; border: 0; border-bottom: 1px solid black;}""
 
         self.setLayout(layout)
 
+    def eventFilter(self, obj, event):
+        # print obj, event
+
+        return super(Paste, self).eventFilter(obj, event)
+
     def showAndPopulate(self, data):
         data = data[-self.historyLength:] if len(data) >= self.historyLength else data
         data = list(reversed(data))
 
         if data == self.previousData:
             self.show()
+            self.activateWindow()
             return
 
         self.active = None
@@ -89,6 +97,7 @@ QPushButton{background-color:#444; border: 0; border-bottom: 1px solid black;}""
 
         self.select(self.buttons[0])
         self.show()
+        self.activateWindow()
 
     def deselect(self):
         if self.active:
@@ -108,3 +117,7 @@ QPushButton{background-color:#444; border: 0; border-bottom: 1px solid black;}""
         self.config = config
         self.historyLength = self.config["history_length"]
 
+    def wheelEvent(self, e):
+        print "WHEEL"
+
+        return super(Paste, self).wheelEvent(e)

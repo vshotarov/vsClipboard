@@ -47,6 +47,8 @@ def start():
     mainUI = Main(parsedConfig)
     pasteUI = Paste(parsedConfig)
 
+    QApplication.instance().installEventFilter(pasteUI)
+
     mainUI.show()
 
     ######################
@@ -68,6 +70,7 @@ def start():
         getattr(t, "hidePaste").emit()
         win32gui.SetForegroundWindow(getattr(t, "foregroundWindow"))
         hotkey.sendPasteMessage()
+        print "Sent paste"
 
     ######################
     # Create the two threads we need:

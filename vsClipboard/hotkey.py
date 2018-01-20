@@ -48,33 +48,39 @@ def _hold(funcPress, funcRelease):
     '''
     keyCode = V_KEY_CODE
 
-    state = u32.GetKeyState(keyCode)
-    pressed = (state >> 8) & 1
+    vState = u32.GetKeyState(keyCode)
+    ctrlState = u32.GetKeyState(win32con.VK_CONTROL)
+    vPressed = (vState >> 8) & 1
+    ctrlPressed = (ctrlState >> 8) & 1
 
-    if not pressed:
+    print vPressed, ctrlPressed
+
+    if not (vPressed and ctrlPressed):
         # Getting around a bug where the hotkey is triggered by releasing a key which has 
         # been pressed together with the Ctrl + V combination.
         #
         # Example - If I press Ctrl + A + V it triggers the Ctl + V hotkey. But if at any
         # point I release A, it triggers it again, which means that after releasing the 
-        # Ctrl + V hotkey, the _hold function will be called again.
+        # Ctrl + V hotkey, the _hold function will be called again. 
         return
 
     released = True
     startTime = time.time()
 
-    while u32.GetKeyState(keyCode) == state:
+    while u32.GetKeyState(keyCode) == vState and u32.GetKeyState(win32con.VK_CONTROL) == ctrlState:
         if time.time() - startTime > config.get("hold_before_showing"):
             released = False
             break
+        time.sleep(.05)
 
     if released:
         sendPasteMessage()
+        print "Pate from hold"
         return
 
     funcPress()
 
-    while u32.GetKeyState(keyCode) == state:
+    while u32.GetKeyState(keyCode) == vState and u32.GetKeyState(win32con.VK_CONTROL) == ctrlState:
         time.sleep(.01)
 
     funcRelease()
@@ -101,6 +107,7 @@ def _unregisterHotkey():
     '''Unregisters the Ctrl + V hotkey.
     '''
     u32.UnregisterHotKey(None, 1)
+    print "Unregistered the Ctrl + V hotkey"
 
 
 def _pressKey(keys):
@@ -112,10 +119,13 @@ def _pressKey(keys):
     Args:
         keys: A list of keys to press.
     '''
+    ctrlState = (u32.GetKeyState(win32con.VK_CONTROL) >> 8) & 1
     for code in keys:
         win32api.keybd_event(code, 0, 0, 0)
     for code in keys:
         win32api.keybd_event(code, 0, win32con.KEYEVENTF_KEYUP, 0)
+    if ctrlState:
+        win32api.keybd_event(win32con.VK_CONTROL, 0, 0, 0)
 
 
 def sendPasteMessage():
@@ -129,7 +139,7 @@ def sendPasteMessage():
     as otherwise we are falling into an infinite loop.
     '''
     _unregisterHotkey()
-    _pressKey([win32con.MOD_CONTROL, V_KEY_CODE])
+    _pressKey([win32con.VK_CONTROL, V_KEY_CODE])
     _registerHotkey()
 
 
