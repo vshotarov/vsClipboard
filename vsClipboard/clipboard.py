@@ -87,6 +87,7 @@ def isInternal():
 
 def isImage(existingFormats):
     '''Checks whether there is image data in the list of formats currently in the
+    clipboard.
 
     Args:
         existingFormats: list of the current formats in the clipboard
@@ -102,6 +103,7 @@ def isImage(existingFormats):
 
 def isFile(existingFormats):
     '''Checks whether there is file data in the list of formats currently in the
+    clipboard.
 
     Args:
         existingFormats: list of the current formats in the clipboard
@@ -117,6 +119,7 @@ def isFile(existingFormats):
 
 def isText(existingFormats):
     '''Checks whether there is text data in the list of formats currently in the
+    clipboard.
 
     Args:
         existingFormats: list of the current formats in the clipboard
@@ -125,13 +128,30 @@ def isText(existingFormats):
         True if text exists in the clipboard formats, else False
         bool
     '''
-    if 11 in existingFormats or 13 in existingFormats:
+    if 1 in existingFormats:
+        return True
+    return False
+
+
+def isUnicode(existingFormats):
+    '''Checks whether there is unicode data in the list of formats currently in the
+    clipboard.
+
+    Args:
+        existingFormats: list of the current formats in the clipboard
+
+    Returns:
+        True if unicode exists in the clipboard formats, else False
+        bool
+    '''
+    if 13 in existingFormats:
         return True
     return False
 
 
 def isHTML(existingFormats):
     '''Checks whether there is HTML data in the list of formats currently in the
+    clipboard.
 
     Args:
         existingFormats: list of the current formats in the clipboard
@@ -152,6 +172,7 @@ def getData():
     {
         "text" : the text data,
         "html" : the html data,
+        "unicode" : the unicode data,
         "hasFile" : a boolean value of whether the text contained is a path to a file
     }
 
@@ -169,19 +190,21 @@ def getData():
     existing = getClipboardFormats()
 
     hasText = isText(existing)
+    hasUnicode = isUnicode(existing)
     hasFile = isFile(existing)
     hasImage = isImage(existing)
     hasHtml = isHTML(existing)
 
-    if not hasText and not hasFile and not hasHtml:  # Once image support is addes hasImage needs to be added here
+    if not hasUnicode and not hasText and not hasFile and not hasHtml:  # Once image support is addes hasImage needs to be added here
         return {}
 
     win32clipboard.OpenClipboard()
 
     text = win32clipboard.GetClipboardData(win32clipboard.CF_TEXT) if hasText else None
+    _unicode = win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT) if hasUnicode else None
 
     html = None
-    if text and hasHtml:
+    if hasHtml:
         html = win32clipboard.GetClipboardData(49416)
 
     if hasFile:
@@ -195,6 +218,7 @@ def getData():
     d = {
         "text": text,
         "html": html,
+        "unicode": _unicode,
         # "hasFile" : hasFile or hasImage
         "hasFile": hasFile
     }
@@ -251,7 +275,7 @@ def save():
         # than the latest one in the history
         while data == old:
             if time.time() - startTime > 1:
-                print "Returning"
+                print "Failed to save"
                 return
             time.sleep(.01)
             data = getData()
@@ -285,9 +309,19 @@ def set(data):
 
     win32clipboard.EmptyClipboard()
 
-    # Converting the "text" key to string as in the case of a file it is a
-    # tuple.
-    win32clipboard.SetClipboardData(win32clipboard.CF_TEXT, str(data["text"]))
+    # Setting the actual clipboard data
+    if data["unicode"]:
+        win32clipboard.SetClipboardData(win32clipboard.CF_UNICODETEXT, data["unicode"])
+
+    if data["text"]:
+        win32clipboard.SetClipboardData(win32clipboard.CF_TEXT,
+                                        data["text"] if isinstance(data["text"], basestring) else str(data["text"][0]))
+
+    if data["html"]:
+        print "setting html"
+        win32clipboard.SetClipboardData(49416, data["html"])
+
+    # Setting custom clipboard format to identify that it's an internal change
     win32clipboard.SetClipboardData(getattr(t, "customClipboardFormatID"), "1")
 
     win32clipboard.CloseClipboard()

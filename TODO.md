@@ -1,5 +1,5 @@
 ## TO DO:
-- [] Languages support
+- [] Languages support - use unicode instead of plain text
 - [] Rewrite the UI classes so they behave in the way I want them and look the way i want them
 - [] Investigate occasional delay
 

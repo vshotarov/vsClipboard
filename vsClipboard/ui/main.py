@@ -57,6 +57,9 @@ class Main(QWidget):
         self.layout().addWidget(self.pollIntervalSpinBox)
         self.layout().addWidget(self.savePreferencesButton)
 
+        with open("vsClipboard/ui/styles.css", "r") as f:
+            self.setStyleSheet(f.read())
+
     def savePreferences(self):
         d = {}
         d["history_length"] = self.historyLengthSpinBox.value()

@@ -84,7 +84,12 @@ QPushButton{background-color:#444; border: 0; border-bottom: 1px solid black;}""
         self.buttons = []
 
         for each in data:
-            text = each["text"] if not each["hasFile"] else each["text"][0]
+            if each["hasFile"]:
+                text = each["text"][0]
+            elif each["unicode"]:
+                text = each["unicode"]
+            else:
+                text = each["text"]
             text = text.strip().lstrip()
             text = text[:100] + "..." if len(text) > 100 else text
             text = "\n".join(text.split("\n")[:2]) + "..." if len(text.split("\n")) > 2 else text
