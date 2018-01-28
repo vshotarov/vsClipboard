@@ -6,7 +6,7 @@ from functools import partial
 from .. import clipboard
 
 
-ACTIVE_COLOUR = "#9b59b6"
+ACTIVE_COLOUR = "#2980b9"
 HOVER_COLOUR = "rgba(112,78,223, 255)"
 
 
@@ -31,6 +31,7 @@ class Paste(QWidget):
         self.setWindowFlags(Qt.Tool | Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)
         self.setFocusPolicy(Qt.NoFocus)
         self.setAttribute(Qt.WA_ShowWithoutActivating)
+        # self.setAttribute(Qt.WA_TranslucentBackground)
 
         self.buttons = []
         self.wheelScrolled = False
@@ -43,9 +44,6 @@ class Paste(QWidget):
 
         self.itemHeight = self.height() * .1
 
-        self.setStyleSheet("""
-QPushButton:hover{background-color:%s}
-QPushButton{background-color:#444; border: 0; border-bottom: 1px solid black;}""" % HOVER_COLOUR)
         with open("vsClipboard/ui/styles.css", "r") as f:
             self.setStyleSheet(f.read())
 
@@ -55,6 +53,7 @@ QPushButton{background-color:#444; border: 0; border-bottom: 1px solid black;}""
         self.setFixedSize(400, screen.height())
 
         layout = QVBoxLayout()
+        layout.setContentsMargins(0,0,0,0)
         layout.setSpacing(0)
 
         self.setLayout(layout)
@@ -112,7 +111,7 @@ QPushButton{background-color:#444; border: 0; border-bottom: 1px solid black;}""
 
     def select(self, button):
         self.active = button
-        self.active.setStyleSheet("background-color:%s" % ACTIVE_COLOUR)
+        self.active.setStyleSheet("background-color:%s; margin:0; padding-left:10px; padding-right:10px;" % ACTIVE_COLOUR)
 
     def buttonClicked(self, data, button):
         self.deselect()

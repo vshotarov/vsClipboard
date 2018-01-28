@@ -3,6 +3,7 @@ from PySide.QtCore import *
 
 from .. import config
 
+
 class Main(QWidget):
     updatePreferences = Signal()
 
@@ -71,6 +72,8 @@ class Main(QWidget):
 
         with open("vsClipboard/ui/styles.css", "r") as f:
             self.setStyleSheet(f.read())
+
+        self.resize(self.minimumSizeHint())
 
     def savePreferences(self):
         d = {}
