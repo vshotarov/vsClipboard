@@ -13,7 +13,7 @@ preferences while running is set up.
 Once the application exits, we make sure the threads are
 terminated fully.
 '''
-from ui import Main, Paste, Main2
+from ui import Main, Paste
 import hotkey
 import clipboard
 import config
@@ -45,13 +45,11 @@ def start():
 
     # Create all pieces of the UI
     mainUI = Main(parsedConfig)
-    mainTMP = Main2(parsedConfig)
     pasteUI = Paste(parsedConfig)
 
     QApplication.instance().installEventFilter(pasteUI)
 
     mainUI.show()
-    mainTMP.show()
 
     ######################
     # Register the custom clipboard format used for recognizing
