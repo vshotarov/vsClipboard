@@ -318,7 +318,6 @@ def set(data):
                                         data["text"] if isinstance(data["text"], basestring) else str(data["text"][0]))
 
     if data["html"]:
-        print "setting html"
         win32clipboard.SetClipboardData(49416, data["html"])
 
     # Setting custom clipboard format to identify that it's an internal change

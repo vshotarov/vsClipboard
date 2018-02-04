@@ -53,8 +53,6 @@ def _hold(funcPress, funcRelease):
     vPressed = (vState >> 8) & 1
     ctrlPressed = (ctrlState >> 8) & 1
 
-    print vPressed, ctrlPressed
-
     if not (vPressed and ctrlPressed):
         # Getting around a bug where the hotkey is triggered by releasing a key which has 
         # been pressed together with the Ctrl + V combination.
@@ -75,7 +73,6 @@ def _hold(funcPress, funcRelease):
 
     if released:
         sendPasteMessage()
-        print "Pate from hold"
         return
 
     funcPress()
@@ -100,14 +97,12 @@ def _registerHotkey():
     '''
     if not u32.RegisterHotKey(None, 1, win32con.MOD_CONTROL | 0x4000, V_KEY_CODE):
         raise RuntimeError("Could not register hotkey for Ctl + V, 1 " + str(V_KEY_CODE))
-    print "Reigstered the Ctrl + V hotkey"
 
 
 def _unregisterHotkey():
     '''Unregisters the Ctrl + V hotkey.
     '''
     u32.UnregisterHotKey(None, 1)
-    print "Unregistered the Ctrl + V hotkey"
 
 
 def _pressKey(keys):
