@@ -1,2 +1,2 @@
 from main import Main
-from paste2 import Paste
+from paste import Paste
