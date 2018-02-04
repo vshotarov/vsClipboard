@@ -95,7 +95,7 @@ class Paste(QWidget):
             text = "\n".join(text.split("\n")[:2]) + "..." if len(text.split("\n")) > 2 else text
 
             self.buttons.append(Button(text, self))
-            self.buttons[-1].setFocusPolicy(Qt.NoFocus)
+            # self.buttons[-1].setFocusPolicy(Qt.NoFocus)
             self.buttons[-1].setSizePolicy(QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred))
             self.buttons[-1].clicked.connect(partial(self.buttonClicked, each, self.buttons[-1]))
             self.layout().addWidget(self.buttons[-1])
