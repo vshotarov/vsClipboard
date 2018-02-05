@@ -1,8 +1,6 @@
 QWidget {
 	background-color: #34495e;
 	color: #bdc3c7;
-	/*background: transparent;*/
-	/*border: 0;*/
 }
 
 Paste QPushButton {
@@ -22,13 +20,14 @@ Paste QPushButton:hover {
 	margin:0;
 	padding-left: 10px;
 	padding-right: 10px;
-	/*color: #7f8c8d;*/
 }
-/*
-QPushButton:pressed {
-	border: 0;
-	border-bottom: 1px solid #446CB3;
-}*/
+
+Paste QPushButton#selected {
+	background-color: #2980b9;
+	margin:0; 
+	padding-left:10px; 
+	padding-right:10px
+}
 
 Main {
 	border: 2px solid #2c3e50;

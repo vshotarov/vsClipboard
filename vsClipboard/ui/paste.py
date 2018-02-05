@@ -5,9 +5,6 @@ from functools import partial
 
 from .. import clipboard
 
-# The colour to be applied to the currently active history entry
-ACTIVE_COLOUR = "#2980b9"
-
 
 class Paste(QWidget):
     '''This is the ui to display and select clipboard history
@@ -69,7 +66,7 @@ class Paste(QWidget):
             self.setStyleSheet(f.read())
 
     def buildUI(self):
-        '''Creates and prepares the layout for displaying the clipboard 
+        '''Creates and prepares the layout for displaying the clipboard
         history.'''
         screen = QCoreApplication.instance().desktop().availableGeometry()
         self.move(screen.x() + screen.width() - 400, screen.y())
@@ -150,20 +147,25 @@ class Paste(QWidget):
     def deselect(self):
         '''Deselects the currently active item.
 
-        All this means is we clean it's stylesheet, so the background reverts
-        back to the default one.
+        All this means is we remove the "selected" objectName and force a 
+        recalculation of the styleSheet so the change is reflected.
         '''
         if self.active:
+            self.active.setObjectName("")
             self.active.setStyleSheet("")
 
     def select(self, button):
         '''Apply the selected colour to the passed in button
 
+        We apply the "selected" objectName, which acts as a CSS class and 
+        force a recalculation of the styleSheet.
+
         Args:
             button: The button to be "selected"
         '''
         self.active = button
-        self.active.setStyleSheet("background-color:%s" % ACTIVE_COLOUR)
+        self.active.setObjectName("selected")
+        self.active.setStyleSheet("")
 
     def buttonClicked(self, data, button):
         '''Applies the "selected" state to the specified button and sets the
