@@ -10,6 +10,7 @@ Attributes:
 import ctypes
 import win32clipboard
 import pywintypes
+import logging
 
 import time
 
@@ -249,7 +250,7 @@ def monitorClipboard():
 
     if hasattr(t, "dbConnection"):
         getattr(t, "dbConnection").close()
-        print "Closed dbConnection in clipboard thread"
+        logging.info("Closed dbConnection in clipboard thread")
 
 
 def save():
@@ -276,7 +277,7 @@ def save():
         # than the latest one in the history
         while data == old:
             if time.time() - startTime > 1:
-                print "Failed to save"
+                logging.error("Failed to save")
                 return
             time.sleep(.01)
             data = getData()
@@ -356,6 +357,6 @@ def openClipboard():
                 win32clipboard.OpenClipboard()
                 return
             except pywintypes.error:
-                print "Failed opening clipboard"
+                logging.debug("Could not open clipboard. Trying again...")
                 time.sleep(.05)
-        print "Could not open clipboard"
+        logging.error("Failed opening clipboard.")

@@ -12,6 +12,7 @@ Attributes:
 '''
 from ctypes import wintypes
 from PySide.QtCore import *
+import logging
 
 import ctypes
 import win32con
@@ -171,8 +172,8 @@ def listenForPaste(funcPress, funcRelease):
             u32.DispatchMessageA(ctypes.byref(msg))
     finally:
         u32.UnregisterHotKey(None, 1)
-        print "Unregistered the Ctrl + V hotkey"
+        logging.info("Unregistered the Ctrl + V hotkey")
 
         if hasattr(t, "dbConnection"):
             getattr(t, "dbConnection").close()
-            print "Closed dbConnection in paste thread"
+            logging.info("Closed dbConnection in paste thread")
