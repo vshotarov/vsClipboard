@@ -9,6 +9,7 @@ Attributes:
 '''
 import ctypes
 import win32clipboard
+import pywintypes
 
 import time
 
@@ -51,7 +52,7 @@ def getClipboardFormats():
         list of formats currently in the clipboard
         list
     '''
-    win32clipboard.OpenClipboard()
+    openClipboard()
 
     available = []
     nextAvailable = win32clipboard.EnumClipboardFormats(0)
@@ -198,7 +199,7 @@ def getData():
     if not hasUnicode and not hasText and not hasFile and not hasHtml:  # Once image support is addes hasImage needs to be added here
         return {}
 
-    win32clipboard.OpenClipboard()
+    openClipboard()
 
     text = win32clipboard.GetClipboardData(win32clipboard.CF_TEXT) if hasText else None
     _unicode = win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT) if hasUnicode else None
@@ -305,7 +306,7 @@ def set(data):
     if not hasattr(t, "customClipboardFormatID"):
         t.customClipboardFormatID = registerCustomClipboardFormat()
 
-    win32clipboard.OpenClipboard()
+    openClipboard()
 
     win32clipboard.EmptyClipboard()
 
@@ -336,3 +337,25 @@ def getHistory():
         list
     '''
     return database.read()
+
+
+def openClipboard():
+    '''Opens the windows clipboard.
+
+    The win32clipboard.OpenClipboard() function needs to be wrapped in a try
+    and except loop as it is possible that the clipboard is currently in
+    operation when we try to access it, which would error with access denied.
+    '''
+    try:
+        win32clipboard.OpenClipboard()
+        return
+    except pywintypes.error:
+        startTime = time.time()
+        while (time.time() - startTime) < 2:
+            try:
+                win32clipboard.OpenClipboard()
+                return
+            except pywintypes.error:
+                print "Failed opening clipboard"
+                time.sleep(.05)
+        print "Could not open clipboard"
