@@ -70,7 +70,7 @@ def _hold(funcPress, funcRelease):
         if time.time() - startTime > config.get("hold_before_showing"):
             released = False
             break
-        time.sleep(.05)
+        # time.sleep(.01)
 
     if released:
         sendPasteMessage()
