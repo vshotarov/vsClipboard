@@ -1,0 +1,13 @@
+/vsClipboard.sublime-*
+/.gitignore
+# /run.py
+/dist
+
+*.pyc
+*.pickle
+*.bat
+# *.png
+
+clipboard_database
+TODO.md
+log.txt
