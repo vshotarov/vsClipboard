@@ -13,6 +13,13 @@ Attributes:
 import json
 from PySide.QtCore import QThread
 
+import ctypes 
+# Letting windows know that this is an application
+# on it's own, instead of just pythonw.exe
+# source - https://stackoverflow.com/questions/1551605/how-to-set-applications-taskbar-icon-in-windows-7
+myappid = u'vsClipboard.v_0_1' 
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+
 _config = {
     "history_length": 10,
     "hold_before_showing": .15,

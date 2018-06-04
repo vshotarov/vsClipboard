@@ -42,6 +42,7 @@ def start():
 
     # App settings
     app.setQuitOnLastWindowClosed(False)
+    app.setWindowIcon(QIcon("icon.png"))
 
     # Create all pieces of the UI
     mainUI = Main(parsedConfig)
