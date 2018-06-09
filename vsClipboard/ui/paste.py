@@ -65,6 +65,28 @@ class Paste(QWidget):
         with open("vsClipboard/ui/styles.css", "r") as f:
             self.setStyleSheet(f.read())
 
+    def focusNextPrevChild(self, down):
+        '''This event is called when pressing the Up and Down arrow keys.
+        
+        I reimplement it in order to support using up and down arrow keys
+        for navigating the selection.
+        
+        Args:
+            down: Usually this argument is called next as it specifies whether 
+            to go forward or backward, but in my case it's clearer to call it
+            down.
+        
+        Returns:
+            bool
+        '''
+        if down:
+            self.selectNext()
+        else:
+            self.selectPrevious()
+        
+        # return super(Paste, self).focusNextPrevChild(*args)
+        return True
+
     def buildUI(self):
         '''Creates and prepares the layout for displaying the clipboard
         history.'''
@@ -189,6 +211,20 @@ class Paste(QWidget):
         '''
         self.historyLength = config["history_length"]
 
+    def selectNext(self):
+        '''Selects the next entry in the clipboard history.'''
+        currentButtonIndex = self.buttons.index(self.active)
+
+        self.deselect()
+        self.select(self.buttons[(currentButtonIndex + 1) % len(self.buttons)])
+
+    def selectPrevious(self):
+        '''Selects the previous entry in the clipboard history.'''
+        currentButtonIndex = self.buttons.index(self.active)
+
+        self.deselect()
+        self.select(self.buttons[(currentButtonIndex - 1) % len(self.buttons)])
+
     def wheelEvent(self, e):
         '''Override of the default wheel event, so we can cycle through the
         clipboard history with a wheel scroll.
@@ -196,13 +232,10 @@ class Paste(QWidget):
         Args:
             e: the event
         '''
-        currentButtonIndex = self.buttons.index(self.active)
-
-        toSelectIndex = currentButtonIndex + 1 if e.delta() < 0 \
-            else currentButtonIndex - 1
-
-        self.deselect()
-        self.select(self.buttons[toSelectIndex % len(self.buttons)])
+        if e.delta() < 0:
+            self.selectNext()
+        else:
+            self.selectPrevious()
 
         # Store the fact that we have scrolled so we can pick the correct
         # item on exiting
