@@ -3,7 +3,7 @@ vsClipboard is an attempt at creating a non-intrusive clipboard tool that re-use
 
 It is available for **Windows only**, not because I am a Microsoft fan (*trust me, I'm not*), but because, unfortunately, that is the OS I am currently stuck with and I believe other OSs probably have much better available tools.
 
-<img src="file:///C:/users/vasko/documents/sharex/screenshots/2018-05/test_2.gif">
+![vsClipboard demo](demo.gif)
 
 ### Why?
 I thought most available clipboard tools were a bit clunky and not well integrated, meaning you would usually use other hotkeys than the classic ones. 
