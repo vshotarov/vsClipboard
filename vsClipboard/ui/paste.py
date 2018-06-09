@@ -162,7 +162,7 @@ class Paste(QWidget):
         # Since there has been a change in the clipboard history we need to
         # select the latest clipboard item and clean up the wheelScrolled state
         self.wheelScrolled = False
-        self.select(self.buttons[0])
+        self.select(0)
         self.show()
         self.activateWindow()
 
@@ -175,17 +175,21 @@ class Paste(QWidget):
         if self.active:
             self.active.setObjectName("")
             self.active.setStyleSheet("")
+            self.active = None
 
-    def select(self, button):
-        '''Apply the selected colour to the passed in button
+    def select(self, buttonId):
+        '''Apply the selected colour to the button corresponding to buttonId
 
         We apply the "selected" objectName, which acts as a CSS class and 
         force a recalculation of the styleSheet.
 
         Args:
-            button: The button to be "selected"
+            buttonId: Which element of the buttons list to be "selected"
         '''
-        self.active = button
+        if not self.buttons:
+            return
+
+        self.active = self.buttons[buttonId % len(self.buttons)]
         self.active.setObjectName("selected")
         self.active.setStyleSheet("")
 
@@ -198,7 +202,7 @@ class Paste(QWidget):
             button: The button widget
         '''
         self.deselect()
-        self.select(button)
+        self.select(self.buttons.index(button))
 
         clipboard.set(data)
 
@@ -213,17 +217,17 @@ class Paste(QWidget):
 
     def selectNext(self):
         '''Selects the next entry in the clipboard history.'''
-        currentButtonIndex = self.buttons.index(self.active)
+        currentButtonIndex = self.buttons.index(self.active) if self.active else -1
 
         self.deselect()
-        self.select(self.buttons[(currentButtonIndex + 1) % len(self.buttons)])
+        self.select(currentButtonIndex + 1)
 
     def selectPrevious(self):
         '''Selects the previous entry in the clipboard history.'''
-        currentButtonIndex = self.buttons.index(self.active)
+        currentButtonIndex = self.buttons.index(self.active) if self.active else -1
 
         self.deselect()
-        self.select(self.buttons[(currentButtonIndex - 1) % len(self.buttons)])
+        self.select(currentButtonIndex - 1)
 
     def wheelEvent(self, e):
         '''Override of the default wheel event, so we can cycle through the
@@ -250,7 +254,7 @@ class Paste(QWidget):
         Args:
             e: the event
         '''
-        if self.wheelScrolled:
+        if self.wheelScrolled and self.active:
             self.active.clicked.emit()
 
         return super(Paste, self).hideEvent(e)
